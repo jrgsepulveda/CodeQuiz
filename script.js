@@ -9,9 +9,21 @@ var timer = document.getElementById("timer");
 var instrcutions = document.getElementById("instructions");
 var highScore = document.getElementById("highScore");
 var scoreOuput = document.getElementById("score")
+var savedPlayers = document.getElementById("players");
+var playersInput = document.getElementById("playersInput")
+var clearBTN = document.getElementById("clearBtn")
+var restartBTN = document.getElementById("restartBTN")
+var submit = document.getElementById("enterBTN")
+var list = document.getElementById("list")
+var shuffledQuestions, currentQuestionIndex;
 var timerValue = 90;
 var score = 0;
-var shuffledQuestions, currentQuestionIndex;
+var highScores = [];
+var storedPlayers = localStorage.getItem("highScores")
+if(storedPlayers){
+  highScores = JSON.parse(storedPlayers);
+  };
+
 
 //Start button
 startButton.addEventListener("click", startGame);
@@ -23,9 +35,11 @@ nextButton.addEventListener("click", () => {
 //Timer Function
 function setTime() {
     var timerInterval = setInterval(function() {
-      timerValue--
-      timer.textContent = "Time Left: " + timerValue;
-      if(timerValue === 0) {
+      if(timerValue > 0) {
+        timerValue--
+        timer.textContent = "Time Left: " + timerValue;
+      }
+      else{
         endGame(); 
         clearInterval(timerInterval); 
       }
@@ -44,25 +58,26 @@ function startGame() {
 };
 
 function endGame(){
-  localStorage.setItem("score", score)
-  questionContainerElement.classList.add("hide")
-  navbar.classList.add("hide")
-  highScore.classList.remove("hide")
-  scoreOuput.textContent = "Total Score: " + score;
+  score = score - 100;
+  navbar.classList.add("hide");
+  highScore.classList.remove("hide");
+  scoreOuput.textContent = "Score Total: " + score;
+  questionContainerElement.classList.add("hide"); 
 };
 
 function setNextQuestion() {
   resetState();
   showQuestion(shuffledQuestions[currentQuestionIndex]);
 };
+
 function showQuestion(question) {
   questionElement.innerText = question.question;
   question.answers.forEach(answer => {
     var button = document.createElement("button");
     button.innerText = answer.text;
     button.classList.add("btn");
-    if (answer.correct) {
-      button.dataset.correct = answer.correct;
+      if (answer.correct) {
+      button.dataset.correct = answer.correct;  
     };
     button.addEventListener("click", selectAnswer);
     answerButtonsElement.appendChild(button);
@@ -95,12 +110,10 @@ function selectAnswer(e) {
 function setStatusClass(element, correct) {
   clearStatusClass(element);
   if (correct) {
-    score = score + 5;
     element.classList.add("correct");
-    timerValue = timerValue;
-  } 
-  else {
-    element.classList.add("wrong");
+    score = score + 10;
+  }else {
+      element.classList.add("wrong");
   };
 };
 
@@ -108,6 +121,46 @@ function clearStatusClass(element) {
   element.classList.remove("correct");
   element.classList.remove("wrong");
 };
+
+function renderPlayers(){
+  playersInput.innerHTML = ""
+ for(i=0; i < highScores.length; i++){
+    var playerList = document.createElement("li");
+    playerList.innerText = highScores[i];
+    savedPlayers.appendChild(playerList);
+ };
+};
+
+submit.addEventListener("click", function(event){
+  event.preventDefault();
+  highScoreList()
+  highScore.classList.add("hide");
+  list.classList.remove("hide");
+});
+
+
+function highScoreList(){
+  if(playersInput.value){
+    highScores.push(playersInput.value + " Score: " + score)
+    renderPlayers();
+    playersInput.value = "";
+    localStorage.setItem("highScores", JSON.stringify(highScores))
+  };
+     
+};
+
+clearBTN.addEventListener("click", function(event){
+  event.preventDefault();
+  clearBTN = localStorage.clear();
+  savedPlayers.remove();
+});
+
+restartBTN.addEventListener("click", function(event){
+  event.preventDefault();
+  location.reload();
+});
+
+
 
 //Object with all the queastions
 var questions = [

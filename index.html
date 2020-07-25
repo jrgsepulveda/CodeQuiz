@@ -31,9 +31,20 @@
       <h1>JavaScript Quiz</h1>
       <h3>Press the start button to begin the quiz.</h3>
     </div>
-    <div id="highScore" class="hide">
+    <form id="highScore" class="hide">
       <h1 id="score"></h1>
-      <input type="text" placeholder="Please Enter Your Initials">
+      <input type="text" id="playersInput" placeholder="Enter Your Name">
+      <button id="enterBTN" class="btn">Submit</button>
+    </form>
+    <div id="list" class="hide">
+      <h1>Player Scores:</h1>
+      <div>
+        <ul id="players">
+        </ul>
+      </div>
+      <div>
+        <button id="clearBtn" class="btn">Clear Scores</button><button id="restartBTN" class="btn">Back</button>
+      </div>
     </div>
     <div id="question-container" class="hide">
       <div id="question">Question</div>
