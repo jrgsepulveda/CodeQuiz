@@ -16,7 +16,7 @@ var restartBTN = document.getElementById("restartBTN")
 var submit = document.getElementById("enterBTN")
 var list = document.getElementById("list")
 var shuffledQuestions, currentQuestionIndex;
-var timerValue = 90;
+var timerValue = 45;
 var score = 0;
 var highScores = [];
 var storedPlayers = localStorage.getItem("highScores")
